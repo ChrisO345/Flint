@@ -1,0 +1,16 @@
+open Cohttp_lwt_unix
+open Cohttp
+
+let style_sheet () =
+  let body = Helpers.read_file "templates/static/style.css" in
+  Server.respond_string ~status:`OK
+    ~headers:(Header.init_with "Content-Type" "text/css")
+    ~body ()
+
+let home_page () =
+  let file = Helpers.read_file "templates/index.html" in
+  Helpers.serve_page ~html_content:file ~status:`OK
+
+let not_found () =
+  let file = Helpers.read_file "templates/404.html" in
+  Helpers.serve_page ~html_content:file ~status:`Not_found

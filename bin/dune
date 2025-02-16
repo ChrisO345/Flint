@@ -1,0 +1,4 @@
+(executable
+ (public_name Flint)
+ (name main)
+ (libraries Flint Router cohttp-lwt-unix lwt))
