@@ -1,4 +1,4 @@
 (executable
  (public_name Flint)
  (name main)
- (libraries Flint Router cohttp-lwt-unix lwt))
+ (libraries Flint Ciphers Crypto Formats Router cohttp-lwt-unix lwt))
