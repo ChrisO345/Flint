@@ -7,6 +7,38 @@
     <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
-<h1 class="header">Flint</h1>
+<div class="header-bar">
+    <span class="header">Flint</span>
+</div>
+<div class="container">
+    <div class="column">
+        <h2>Column 1</h2>
+        <label for="search"></label><input type="text" id="search" placeholder="Search...">
+        <ul id="search-results">
+            {{SEARCH_RESULTS}}
+        </ul>
+    </div>
+    <div class="column">
+        <h2>Column 2</h2>
+        <label for="Encode Queue"></label><textarea id="Encode Queue"></textarea>
+    </div>
+    <div class="column">
+        <h2>Column 3</h2>
+        <div class="box">
+            <h2>Input</h2>
+            <label for="input"></label><textarea id="input" rows="10"></textarea>
+        </div>
+        <div class="box">
+            <h2>Output</h2>
+            <label for="output"></label><textarea id="output" rows="10" readonly></textarea>
+        </div>
+        <div class="box">
+            <h2>Actions</h2>
+            <button id="encode">Encode</button>
+            <button id="clear">Clear</button>
+            <input type="checkbox" id="auto"><label for="auto">Auto</label>
+        </div>
+    </div>
+</div>
 </body>
 </html>
