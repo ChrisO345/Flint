@@ -1,3 +1,4 @@
+open Lwt.Infix
 open Cohttp_lwt_unix
 open Crypto
 
@@ -6,6 +7,10 @@ let callback _conn req _body =
   match Uri.path uri with
   | "/" -> Router.home_page ()
   | "/static/style.css" -> Router.style_sheet ()
+  | "/scripts/index.js" -> Router.home_js ()
+  | "/encode" ->
+      _body |> Cohttp_lwt.Body.to_string >>= fun body_str ->
+      Server.respond_string ~status:`OK ~body:(Api.test_call body_str) ()
   | _ -> Router.not_found ()
 
 let server =
