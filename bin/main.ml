@@ -1,6 +1,5 @@
 open Lwt.Infix
 open Cohttp_lwt_unix
-open Crypto
 
 let callback _conn req _body =
   let uri = Request.uri req in
@@ -17,13 +16,7 @@ let server =
   let config = Server.make ~callback () in
   Server.create ~mode:(`TCP (`Port 8080)) config
 
-let test_base32 =
-  let encoder = new Base32.base32 `To `Standard in
-  let encoded_string = encoder#encoder "Hello, world!" in
-  Printf.printf "%s\n" encoded_string
-
 let () =
-  test_base32;
   Logs.set_reporter (Logs_fmt.reporter ());
   Logs.set_level (Some Logs.Info);
   let port = 8080 in
