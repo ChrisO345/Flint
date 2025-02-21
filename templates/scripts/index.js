@@ -19,6 +19,12 @@ document.addEventListener("DOMContentLoaded", function () {
         responseField.innerText = await response.text();
     });
 
+    inputField.addEventListener("keydown",  function (event) {
+        if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+            submitButton.click();
+        }
+    });
+
     submitButton.addEventListener("click", async function () {
         let inputValue = inputField.value;
         let response = await fetch("/encode", {

@@ -1,6 +1,17 @@
+(* lib/api/api.ml *)
+
 open Crypto
 
-let test_call contents =
-  let encoder = new Base32.base32 `Encode `Standard in
-  let encoded_string = encoder#run contents in
-  encoded_string
+let queue =
+  (*  [ new Base32.base32 `Encode `Standard; new Base32.base32 `Decode `Standard ] *)
+  [ new Base32.base32 `Decode `Standard ]
+
+let run_encode_queue =
+  let rec run_queue queue contents =
+    match queue with
+    | [] -> contents
+    | encoder :: rest ->
+        let encoded_string = encoder#run contents in
+        run_queue rest encoded_string
+  in
+  run_queue queue

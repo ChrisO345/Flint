@@ -1,3 +1,5 @@
+(* lib/crypto/baseN.ml *)
+
 class virtual baseN (name : string) (direction : Common.encode_direction)
   (alphabet : string) =
   object
