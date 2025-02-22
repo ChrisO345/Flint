@@ -15,3 +15,10 @@ let run_encode_queue =
         run_queue rest encoded_string
   in
   run_queue queue
+
+let wrap_filterable_div item = "<div class=\"filterable\">" ^ item ^ "</div>"
+
+let get_filterable_items () =
+  let items = [ "Hello"; "World"; "Goodbye" ] in
+  let div_items = List.map wrap_filterable_div items in
+  String.concat "" div_items

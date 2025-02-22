@@ -6,6 +6,6 @@ class virtual operation : string -> encode_direction -> object
   val name : string
   val direction : encode_direction
   method virtual encode : string -> string
-  method virtual decode : string -> string
+  method virtual decode : string -> string option
   method run : string -> string
 end

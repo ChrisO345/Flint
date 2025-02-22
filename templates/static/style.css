@@ -17,23 +17,55 @@
 }
 
 textarea {
+    width: 100%;
     resize: none;
 }
 
 .container {
     display: flex;
-    justify-content: space-between; /* Distributes columns with space between */
+    justify-content: space-between;
 }
 
 .column {
-    flex: 1; /* Makes columns take equal space */
-    margin: 0 5px; /* Adds spacing between columns */
+    flex: 1;
+    margin: 0 5px;
     text-align: center;
     padding: 10px;
 }
 
+.search-column {
+    max-width: 20%;
+}
+
+.queue-column {
+    max-width: 25%;
+}
+
+.text-column {
+
+}
+
+#filter-results {
+    max-width: 75%;
+    margin: 10px auto 0;
+    height: 75vh;
+    overflow-y: scroll;
+}
+
+.filterable {
+    text-align: center;
+    height: 50px;
+    margin: 5px;
+    padding: 10px;
+    background: palegreen;
+}
+
+.filterable:hover {
+    background: lightgreen;
+}
+
 
 /* Debug Border */
-.header-bar, .column {
+.header-bar, .column, .filterable {
     border: 2px dashed #f69c55;
 }

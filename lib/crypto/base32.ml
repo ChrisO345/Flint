@@ -51,39 +51,41 @@ class base32 (direction : Common.encode_direction)
       in
       padded_b32_string
 
-    method decode (s : string) : string =
-      let index_of_char c = String.index alphabet c in
-      let bin_of_index i =
-        let bin = Bytes.make 5 '0' in
-        let rec loop n i =
-          if n > 0 then (
-            let bit = if n land 1 = 1 then '1' else '0' in
-            Bytes.set bin (4 - i) bit;
-            loop (n lsr 1) (i + 1))
+    method decode (s : string) : string option =
+      try
+        let index_of_char c = String.index alphabet c in
+        let bin_of_index i =
+          let bin = Bytes.make 5 '0' in
+          let rec loop n i =
+            if n > 0 then (
+              let bit = if n land 1 = 1 then '1' else '0' in
+              Bytes.set bin (4 - i) bit;
+              loop (n lsr 1) (i + 1))
+          in
+          loop i 0;
+          Bytes.to_string bin
         in
-        loop i 0;
-        Bytes.to_string bin
-      in
-      let stripped_data =
-        String.trim (String.map (fun c -> if c = '=' then ' ' else c) s)
-      in
-      let binary_chunks =
-        String.concat ""
-          (List.map
-             (fun c -> bin_of_index (index_of_char c))
-             (String.to_seq stripped_data |> List.of_seq))
-      in
-      let binary_data =
-        List.init
-          (String.length binary_chunks / 8)
-          (fun i -> String.sub binary_chunks (i * 8) 8)
-      in
-      let result =
-        List.map
-          (fun chunk ->
-            let idx = int_of_string ("0b" ^ chunk) in
-            Char.chr idx)
-          binary_data
-      in
-      String.concat "" (List.map (String.make 1) result)
+        let stripped_data =
+          String.trim (String.map (fun c -> if c = '=' then ' ' else c) s)
+        in
+        let binary_chunks =
+          String.concat ""
+            (List.map
+               (fun c -> bin_of_index (index_of_char c))
+               (String.to_seq stripped_data |> List.of_seq))
+        in
+        let binary_data =
+          List.init
+            (String.length binary_chunks / 8)
+            (fun i -> String.sub binary_chunks (i * 8) 8)
+        in
+        let result =
+          List.map
+            (fun chunk ->
+              let idx = int_of_string ("0b" ^ chunk) in
+              Char.chr idx)
+            binary_data
+        in
+        Some (String.concat "" (List.map (String.make 1) result))
+      with _ -> None
   end
