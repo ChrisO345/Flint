@@ -1,4 +1,4 @@
 (library
  (name Crypto)
- (modules crypto baseN base32)
+ (modules crypto baseN base32 base64)
  (libraries Common))

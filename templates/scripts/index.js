@@ -1,4 +1,8 @@
+const queueList = document.getElementById("queue-list");
+
 document.addEventListener("DOMContentLoaded", function () {
+    updateClientQueue().then(r => console.log("Queue loaded."));
+
     const inputField = document.getElementById("input");
     const responseField = document.getElementById("output");
 
@@ -8,6 +12,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const autoEncode = document.getElementById("auto");
 
     const filterSearch = document.getElementById("filter-search");
+
+    const filterableElements = document.querySelectorAll(".filterable");
+
+    const queueClearButton = document.getElementById("queue-clear");
 
     inputField.addEventListener("input", async function () {
         if (!autoEncode.checked) {
@@ -21,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
         responseField.innerText = await response.text();
     });
 
-    inputField.addEventListener("keydown",  function (event) {
+    inputField.addEventListener("keydown", function (event) {
         if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
             submitButton.click();
         }
@@ -54,4 +62,51 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
+
+    filterableElements.forEach(element => {
+        element.addEventListener("click", async function () {
+            await updateServerQueue(element.innerText);
+        });
+    });
+
+    queueClearButton.addEventListener("click", async function () {
+        let req = {
+            method: "POST",
+            body: JSON.stringify({
+                method: "CLS"
+            })
+        }
+
+        let response = await fetch("/queue", req);
+        let queue = await response.text();
+        console.log(queue);
+        await updateClientQueue();
+    });
 });
+
+async function updateServerQueue(name) {
+    let req = {
+        method: "POST",
+        body: JSON.stringify({
+            method: "ADD", // Only functionality exists for adding to the queue.
+            name: name
+        })
+    }
+
+    let response = await fetch("/queue", req);
+    let queue = await response.text();
+    console.log(queue);
+    await updateClientQueue();
+}
+
+async function updateClientQueue() {
+    let req = {
+        method: "POST",
+        body: JSON.stringify({
+            method: "GET"
+        })
+    }
+
+    let response = await fetch("/queue", req);
+    queueList.innerHTML = await response.text();
+}

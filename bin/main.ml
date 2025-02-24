@@ -12,6 +12,11 @@ let callback _conn req _body =
   | "/encode" ->
       _body |> Cohttp_lwt.Body.to_string >>= fun body_str ->
       Server.respond_string ~status:`OK ~body:(Api.run_encode_queue body_str) ()
+  | "/queue" ->
+      _body |> Cohttp_lwt.Body.to_string >>= fun body_str ->
+      Server.respond_string ~status:`OK
+        ~body:(Api.handle_queue_request body_str)
+        ()
   | _ -> Router.not_found ()
 
 let server =

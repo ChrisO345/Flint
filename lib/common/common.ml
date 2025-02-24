@@ -5,6 +5,12 @@ type encode_direction = [ `Encode | `Decode ]
 class virtual operation (name : string) (direction : encode_direction) =
   object (self)
     val name : string = name
+
+    method name : string =
+      match direction with
+      | `Encode -> name ^ " (encode)"
+      | `Decode -> name ^ " (decode)"
+
     val direction : encode_direction = direction
     method virtual encode : string -> string
     method virtual decode : string -> string option
