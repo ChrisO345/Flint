@@ -12,7 +12,7 @@ module Base32 : sig
 end
 
 module Base64 : sig
-  type base64_alphabet = [ `Standard | `Extended ]
+  type base64_alphabet = [ `RFC4648 ]
 
   class base64 : Common.encode_direction -> base64_alphabet -> object
     method name : string

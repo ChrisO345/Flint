@@ -7,14 +7,11 @@ let items =
   [
     new Base32.base32 `Encode `Standard;
     new Base32.base32 `Decode `Standard;
-    new Base64.base64 `Encode `Standard;
-    new Base64.base64 `Decode `Standard;
+    new Base64.base64 `Encode `RFC4648;
+    new Base64.base64 `Decode `RFC4648;
   ]
 
-let queue =
-  ref
-    (*  [ new Base32.base32 `Encode `Standard; new Base32.base32 `Decode `Standard ] *)
-    [ new Base32.base32 `Encode `Standard ]
+let queue = ref []
 
 let run_encode_queue contents =
   let rec run_queue queue contents =
