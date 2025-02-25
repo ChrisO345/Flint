@@ -64,8 +64,30 @@ textarea {
     background: lightgreen;
 }
 
+.filterable:active {
+    background: darkseagreen;
+}
+
+/* queue-item class should have text left-aligned and buttons right-aligned */
+.queue-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin: 5px;
+    height: 50px;
+}
+
+/* queue-buttons class should have components stacked vertically */
+.queue-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
 
 /* Debug Border */
-.header-bar, .column, .filterable {
+.header-bar, .column, .filterable, .queue-item {
     border: 2px dashed #f69c55;
 }

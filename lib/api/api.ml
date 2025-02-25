@@ -1,16 +1,5 @@
 (* lib/api/api.ml *)
 
-open Crypto
-
-(* TODO: hashmap this collection based on name *)
-let items =
-  [
-    new Base32.base32 `Encode `Standard;
-    new Base32.base32 `Decode `Standard;
-    new Base64.base64 `Encode `RFC4648;
-    new Base64.base64 `Decode `RFC4648;
-  ]
-
 let queue = ref []
 
 let run_encode_queue contents =
@@ -27,14 +16,14 @@ let wrap_filterable_div item =
   "<div class=\"filterable\">" ^ item#name ^ "</div>"
 
 let get_filterable_items () =
-  let div_items = List.map wrap_filterable_div items in
+  let div_items = List.map wrap_filterable_div Collection.items in
   String.concat "" div_items
 
 let get_queue_item_names () =
   let queue_names = List.map (fun item -> item#name) !queue in
   String.concat "\n" queue_names
 
-let methods = [ `GET; `ADD; `REM; `CLS; `ERR ]
+let methods = [ `GET; `ADD; `REM; `INC; `DEC; `CLS; `ERR ]
 
 let parse_json (req : string) : string =
   (* This is a basic json parser assuming that there are no commas apart from the value separators and known value headers *)
@@ -49,6 +38,8 @@ let parse_json (req : string) : string =
     | "GET" -> `GET
     | "ADD" -> `ADD
     | "REM" -> `REM
+    | "INC" -> `INC
+    | "DEC" -> `DEC
     | "CLS" -> `CLS
     | _ -> `ERR
   in
@@ -61,16 +52,52 @@ let parse_json (req : string) : string =
     let name = String.sub name_elem 8 (String.length name_elem - 9) in
     match meth with
     | `ADD -> (
-        match List.find_opt (fun item -> item#name = name) items with
+        match List.find_opt (fun item -> item#name = name) Collection.items with
         | Some encoder ->
             queue := !queue @ [ encoder ];
             "Added " ^ name ^ " to the queue. Current queue: "
             ^ String.concat ", " (List.map (fun item -> item#name) !queue)
         | None -> "ERROR: Encoder not found")
     | `REM ->
-        queue := List.filter (fun item -> item#name <> name) !queue;
-        "Removed " ^ name ^ " from the queue. Current queue: "
-        ^ String.concat ", " (List.map (fun item -> item#name) !queue)
+        let index_elem = List.nth json_list 2 in
+        let index = String.sub index_elem 8 (String.length index_elem - 8) in
+        let index_int = int_of_string index in
+        if index_int < List.length !queue then (
+          let removed = List.nth !queue index_int in
+          queue :=
+            List.mapi
+              (fun i item -> if i = index_int then None else Some item)
+              !queue
+            |> List.filter Option.is_some |> List.map Option.get;
+          "Removed " ^ removed#name ^ " from the queue. Current queue: "
+          ^ String.concat ", " (List.map (fun item -> item#name) !queue))
+        else "ERROR: Index out of bounds"
+    | `INC ->
+        let index_elem = List.nth json_list 2 in
+        let index = String.sub index_elem 8 (String.length index_elem - 8) in
+        let index_int = int_of_string index in
+        if index_int > 0 && index_int < List.length !queue then (
+          let new_queue = Array.of_list !queue in
+          let temp = new_queue.(index_int - 1) in
+          new_queue.(index_int - 1) <- new_queue.(index_int);
+          new_queue.(index_int) <- temp;
+          queue := Array.to_list new_queue;
+          "Moved up " ^ new_queue.(index_int - 1)#name ^ ". Current queue: "
+          ^ String.concat ", " (List.map (fun item -> item#name) !queue))
+        else "ERROR: Cannot increase position"
+    | `DEC ->
+        let index_elem = List.nth json_list 2 in
+        let index = String.sub index_elem 8 (String.length index_elem - 8) in
+        let index_int = int_of_string index in
+        if index_int >= 0 && index_int < List.length !queue - 1 then (
+          let new_queue = Array.of_list !queue in
+          let temp = new_queue.(index_int + 1) in
+          new_queue.(index_int + 1) <- new_queue.(index_int);
+          new_queue.(index_int) <- temp;
+          queue := Array.to_list new_queue;
+          "Moved down " ^ new_queue.(index_int + 1)#name ^ ". Current queue: "
+          ^ String.concat ", " (List.map (fun item -> item#name) !queue))
+        else "ERROR: Cannot decrease position"
     | _ -> "ERROR with queue manipulation"
   else get_queue_item_names ()
 
