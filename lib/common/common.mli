@@ -1,5 +1,7 @@
 (* lib/common/common.mli *)
 
+exception Decode_error of string
+
 type encode_direction = [ `Encode | `Decode ]
 
 class virtual operation : string -> encode_direction -> object

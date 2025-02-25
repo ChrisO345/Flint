@@ -1,4 +1,4 @@
 (library
  (name Api)
  (modules api collection)
- (libraries Common Crypto))
+ (libraries Common Crypto Formats))

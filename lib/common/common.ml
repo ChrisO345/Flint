@@ -1,5 +1,7 @@
 (* lib/common/common.ml *)
 
+exception Decode_error of string
+
 type encode_direction = [ `Encode | `Decode ]
 
 class virtual operation (name : string) (direction : encode_direction) =

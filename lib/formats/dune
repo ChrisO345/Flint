@@ -1,4 +1,4 @@
 (library
  (name Formats)
- (modules formats)
- (libraries))
+ (modules formats binary)
+ (libraries Common))
