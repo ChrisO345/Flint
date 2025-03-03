@@ -14,4 +14,8 @@ let items =
     new Base64.base64 `Decode `RFC4648;
     new Binary.binary `Encode;
     new Binary.binary `Decode;
+    new Hex.hex `Encode;
+    new Hex.hex `Decode;
+    new Octal.octal `Encode;
+    new Octal.octal `Decode;
   ]

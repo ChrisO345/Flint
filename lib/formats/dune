@@ -1,4 +1,4 @@
 (library
  (name Formats)
- (modules formats binary)
+ (modules formats binary hex octal)
  (libraries Common))
