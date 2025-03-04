@@ -1,5 +1,7 @@
 # Flint
 
+*Flint is still in development so breaking changes may occur.*
+
 Flint is a tool for encoding and decoding different data formats in sequence. Note that Flint is still in development, and some UI
 features are not yet implemented.
 

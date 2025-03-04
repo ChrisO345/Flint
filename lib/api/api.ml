@@ -21,7 +21,25 @@ let get_filterable_items () =
 
 let get_queue_item_names () =
   let queue_names = List.map (fun item -> item#name) !queue in
-  String.concat "\n" queue_names
+  let divs = ref "" in
+  List.iteri
+    (fun index line ->
+      divs :=
+        !divs ^ "<div class=\"queue-item\">" ^ line
+        ^ "<div class=\"queue-buttons\">";
+      if index <> 0 then
+        divs :=
+          !divs ^ "<button onclick=\"modifyServerQueue('" ^ line ^ "', "
+          ^ string_of_int index ^ ", 'INC')\">^</button>";
+      if index <> List.length queue_names - 1 then
+        divs :=
+          !divs ^ "<button onclick=\"modifyServerQueue('" ^ line ^ "', "
+          ^ string_of_int index ^ ", 'DEC')\">v</button>";
+      divs :=
+        !divs ^ "</div><button onclick=\"modifyServerQueue('" ^ line ^ "', "
+        ^ string_of_int index ^ ", 'REM')\">-</button></div>")
+    queue_names;
+  !divs
 
 let methods = [ `GET; `ADD; `REM; `INC; `DEC; `CLS; `ERR ]
 

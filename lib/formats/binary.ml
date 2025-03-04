@@ -2,7 +2,7 @@
 
 class binary (direction : Common.encode_direction) =
   object
-    inherit Common.operation "Binary" direction
+    inherit Common.operation "Binary" direction None
 
     method encode (s : string) : string =
       let to_binary_string c =

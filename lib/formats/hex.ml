@@ -2,7 +2,7 @@
 
 class hex (direction : Common.encode_direction) =
   object
-    inherit Common.operation "Hex" direction
+    inherit Common.operation "Hex" direction None
 
     method encode (s : string) : string =
       let to_hex_string c = Printf.sprintf "%02x" (Char.code c) in

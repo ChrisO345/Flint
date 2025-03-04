@@ -2,15 +2,15 @@
 
 type base32_alphabet = [ `Standard | `Extended ]
 
-let determine_alphabet (alpha_type : base32_alphabet) : string =
-  match alpha_type with
-  | `Standard -> "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
-  | `Extended -> "0123456789ABCDEFGHIJKLMNOPQRSTUV"
+let custom_alphabet : (string * string) list =
+  [
+    ("Standard", "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567");
+    ("Extended", "0123456789ABCDEFGHIJKLMNOPQRSTUV");
+  ]
 
-class base32 (direction : Common.encode_direction)
-  (alphabet_type : base32_alphabet) =
+class base32 (direction : Common.encode_direction) =
   object
-    inherit BaseN.baseN "Base32" direction (determine_alphabet alphabet_type)
+    inherit BaseN.baseN "Base32" direction custom_alphabet
 
     method encode (s : string) : string =
       let to_binary_string c =

@@ -2,7 +2,7 @@
 
 class octal (direction : Common.encode_direction) =
   object
-    inherit Common.operation "Octal" direction
+    inherit Common.operation "Octal" direction None
 
     method encode (s : string) : string =
       let to_octal_string c = Printf.sprintf "%03o" (Char.code c) in

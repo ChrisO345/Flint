@@ -8,10 +8,12 @@ TODO: hashmap this collection based on name??
 *)
 let items =
   [
-    new Base32.base32 `Encode `Standard;
-    new Base32.base32 `Decode `Standard;
-    new Base64.base64 `Encode `RFC4648;
-    new Base64.base64 `Decode `RFC4648;
+    (* Base Encryptions *)
+    new Base32.base32 `Encode;
+    new Base32.base32 `Decode;
+    new Base64.base64 `Encode;
+    new Base64.base64 `Decode;
+    (* Formats *)
     new Binary.binary `Encode;
     new Binary.binary `Decode;
     new Hex.hex `Encode;

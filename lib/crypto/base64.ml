@@ -2,15 +2,15 @@
 
 type base64_alphabet = [ `RFC4648 ]
 
-let determine_alphabet (alpha_type : base64_alphabet) : string =
-  match alpha_type with
-  | `RFC4648 ->
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+let custom_alphabet : (string * string) list =
+  [
+    ( "RFC4648",
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/" );
+  ]
 
-class base64 (direction : Common.encode_direction)
-  (alphabet_type : base64_alphabet) =
+class base64 (direction : Common.encode_direction) =
   object
-    inherit BaseN.baseN "Base64" direction (determine_alphabet alphabet_type)
+    inherit BaseN.baseN "Base64" direction custom_alphabet
 
     method encode (s : string) : string =
       let to_binary_string c =

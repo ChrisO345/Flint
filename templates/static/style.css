@@ -48,7 +48,7 @@ textarea {
 #filter-results {
     max-width: 75%;
     margin: 10px auto 0;
-    height: 75vh;
+    height: 70vh;
     overflow-y: scroll;
 }
 
@@ -68,7 +68,13 @@ textarea {
     background: darkseagreen;
 }
 
-/* queue-item class should have text left-aligned and buttons right-aligned */
+#queue-results {
+    max-width: 75%;
+    margin: 10px auto 0;
+    height: 60vh;
+    overflow-y: scroll;
+}
+
 .queue-item {
     display: flex;
     justify-content: space-between;
@@ -78,14 +84,12 @@ textarea {
     height: 50px;
 }
 
-/* queue-buttons class should have components stacked vertically */
 .queue-buttons {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
 }
-
 
 /* Debug Border */
 .header-bar, .column, .filterable, .queue-item {
