@@ -19,26 +19,53 @@ let get_filterable_items () =
   let div_items = List.map wrap_filterable_div Collection.items in
   String.concat "" div_items
 
+(*
+!divs ^ "<br><p> "
+^ String.concat ", " (List.map (fun cfg -> cfg#name) cfgs)
+^ "</p>");
+*)
+let get_configuration_component component =
+  let cfg_name = component#name in
+  let result =
+    match component#config_type with
+    | `Toggle ->
+        let check = if component#value = "True" then "checked" else "" in
+        cfg_name ^ "<input type=\"checkbox\" class=\"configuration-element\" "
+        ^ check ^ "/>"
+    | `Picklist -> cfg_name ^ " Picklist"
+    | `Text -> cfg_name ^ " Text"
+    | `Number -> cfg_name ^ " Number"
+  in
+  result
+
 let get_queue_item_names () =
-  let queue_names = List.map (fun item -> item#name) !queue in
   let divs = ref "" in
   List.iteri
-    (fun index line ->
-      divs :=
-        !divs ^ "<div class=\"queue-item\">" ^ line
-        ^ "<div class=\"queue-buttons\">";
+    (fun index item ->
+      let line = item#name in
+      divs := !divs ^ "<div class=\"queue-item\">" ^ line;
+      (divs :=
+         match item#configurations with
+         | [] -> !divs
+         | cfgs ->
+             !divs ^ "<br><p> "
+             ^ String.concat ", "
+                 (List.map (fun cfg -> get_configuration_component cfg) cfgs)
+             ^ "</p>");
+
+      divs := !divs ^ "<div class=\"queue-buttons\">";
       if index <> 0 then
         divs :=
           !divs ^ "<button onclick=\"modifyServerQueue('" ^ line ^ "', "
           ^ string_of_int index ^ ", 'INC')\">^</button>";
-      if index <> List.length queue_names - 1 then
+      if index <> List.length !queue - 1 then
         divs :=
           !divs ^ "<button onclick=\"modifyServerQueue('" ^ line ^ "', "
           ^ string_of_int index ^ ", 'DEC')\">v</button>";
       divs :=
         !divs ^ "</div><button onclick=\"modifyServerQueue('" ^ line ^ "', "
         ^ string_of_int index ^ ", 'REM')\">-</button></div>")
-    queue_names;
+    !queue;
   !divs
 
 let methods = [ `GET; `ADD; `REM; `INC; `DEC; `CLS; `ERR ]

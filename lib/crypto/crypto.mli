@@ -5,6 +5,7 @@ module Base32 : sig
 
   class base32 : Common.encode_direction -> object
     method name : string
+    method configurations : Common.configurable list
     method encode : string -> string
     method decode : string -> string option
     method run : string -> string
@@ -16,6 +17,7 @@ module Base64 : sig
 
   class base64 : Common.encode_direction -> object
     method name : string
+    method configurations : Common.configurable list
     method encode : string -> string
     method decode : string -> string option
     method run : string -> string

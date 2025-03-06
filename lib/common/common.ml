@@ -5,13 +5,18 @@ type configuration = [ `Toggle | `Picklist | `Text | `Number ]
 type constraint_type =
   | List of string list
   | Range of (int option * int option)
+  | None
 
 class configurable (name : string) (config_type : configuration)
   (default : string) (constraints : constraint_type option) =
   object
     val name : string = name
+    method name : string = name
     val config_type : configuration = config_type
+    method config_type : configuration = config_type
     val mutable value : string = default
+    method value : string = value
+    method set_value (v : string) : unit = value <- v
     val constraints : constraint_type option = constraints
   end
 
@@ -34,6 +39,7 @@ class virtual operation (name : string) (direction : encode_direction)
     val configurations : configurable list =
       match configurations with Some cfgs -> cfgs | None -> []
 
+    method configurations : configurable list = configurations
     method virtual encode : string -> string
     method virtual decode : string -> string option
 
