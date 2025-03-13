@@ -7,8 +7,6 @@ let callback _conn req _body =
   let uri = Request.uri req in
   match Uri.path uri with
   | "/" -> Router.home_page ()
-  | "/static/style.css" -> Router.style_sheet ()
-  | "/scripts/index.js" -> Router.home_js ()
   | "/encode" ->
       _body |> Cohttp_lwt.Body.to_string >>= fun body_str ->
       Server.respond_string ~status:`OK ~body:(Api.run_encode_queue body_str) ()
@@ -17,6 +15,12 @@ let callback _conn req _body =
       Server.respond_string ~status:`OK
         ~body:(Api.handle_queue_request body_str)
         ()
+  | _ when String.starts_with ~prefix:"/static" (Uri.path uri) ->
+      Router.load_css (Uri.path uri)
+  | _ when String.starts_with ~prefix:"/scripts" (Uri.path uri) ->
+      Router.load_javascript (Uri.path uri)
+  | _ when String.starts_with ~prefix:"/assets" (Uri.path uri) ->
+      Router.load_image (Uri.path uri)
   | _ -> Router.not_found ()
 
 let server =

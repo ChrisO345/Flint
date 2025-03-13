@@ -3,6 +3,24 @@
 open Cohttp_lwt_unix
 open Cohttp
 
+let load_image path =
+  let body = Helpers.read_file ("templates/" ^ path) in
+  Server.respond_string ~status:`OK
+    ~headers:(Header.init_with "Content-Type" "image/png")
+    ~body ()
+
+let load_css path =
+  let body = Helpers.read_file ("templates/" ^ path) in
+  Server.respond_string ~status:`OK
+    ~headers:(Header.init_with "Content-Type" "text/css")
+    ~body ()
+
+let load_javascript path =
+  let body = Helpers.read_file ("templates/" ^ path) in
+  Server.respond_string ~status:`OK
+    ~headers:(Header.init_with "Content-Type" "text/javascript")
+    ~body ()
+
 let style_sheet () =
   let body = Helpers.read_file "templates/static/style.css" in
   Server.respond_string ~status:`OK
