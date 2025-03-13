@@ -21,6 +21,7 @@ object
   method value : string
   method set_value : string -> unit
   val constraints : constraint_type option
+  method constraints : constraint_type option
 end
 
 exception Decode_error of string

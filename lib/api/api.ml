@@ -26,7 +26,20 @@ let get_configuration_component component =
         let check = if component#value = "True" then "checked" else "" in
         cfg_name ^ "<input type=\"checkbox\" class=\"configuration-element\" "
         ^ check ^ "/>"
-    | `Picklist -> cfg_name ^ " Picklist"
+    | `Picklist ->
+        let cfg_options_ = component#constraints in
+        let cfg_options =
+          match cfg_options_ with
+          | Some (Common.List options) ->
+              String.concat ""
+                (List.map
+                   (fun option ->
+                     "<option value=\"" ^ option ^ "\">" ^ option ^ "</option>")
+                   options)
+          | _ -> ""
+        in
+        cfg_name ^ "<select class=\"configuration-element\">" ^ cfg_options
+        ^ "</select>"
     | `Text -> cfg_name ^ " Text"
     | `Number -> cfg_name ^ " Number"
   in
@@ -108,7 +121,13 @@ let parse_json (req : string) : string =
           queue := Array.to_list new_queue;
           "Updated " ^ item#name ^ " with new value " ^ cfg#value ^ " from "
           ^ old_value ^ " at index " ^ index
-      | None -> "ERROR: Configuration not found"
+      | None ->
+          let config_names =
+            List.map (fun cfg -> cfg#name) item#configurations
+          in
+          "ERROR: Configuration not found; "
+          ^ String.concat ", " config_names
+          ^ " are available. Provided: " ^ name
     else "ERROR: Index out of bounds"
   else if meth <> `GET then
     let name_elem = List.nth json_list 1 in

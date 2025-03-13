@@ -18,6 +18,7 @@ class configurable (name : string) (config_type : configuration)
     method value : string = value
     method set_value (v : string) : unit = value <- v
     val constraints : constraint_type option = constraints
+    method constraints : constraint_type option = constraints
   end
 
 exception Decode_error of string

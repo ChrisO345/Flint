@@ -10,9 +10,16 @@ let custom_alphabet : (string * string) list =
 
 class base64 (direction : Common.encode_direction) =
   object
-    inherit BaseN.baseN "Base64" direction custom_alphabet
+    inherit BaseN.baseN "Base64" direction "RFC4648" custom_alphabet
 
     method encode (s : string) : string =
+      let alpha_config =
+        List.find_opt (fun cfg -> cfg#name = "Alphabet") configurations
+      in
+      let alpha_type =
+        match alpha_config with Some cfg -> cfg#value | None -> "RFC4648"
+      in
+      let alphabet = List.assoc alpha_type custom_alphabet in
       let to_binary_string c =
         let bin = Bytes.make 8 '0' in
         let rec loop n i =
@@ -49,6 +56,13 @@ class base64 (direction : Common.encode_direction) =
 
     method decode (s : string) : string option =
       try
+        let alpha_config =
+          List.find_opt (fun cfg -> cfg#name = "Alphabet") configurations
+        in
+        let alpha_type =
+          match alpha_config with Some cfg -> cfg#value | None -> "RFC4648"
+        in
+        let alphabet = List.assoc alpha_type custom_alphabet in
         let trimmed =
           String.trim (String.map (fun c -> if c = '=' then ' ' else c) s)
           |> String.trim

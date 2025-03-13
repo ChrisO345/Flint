@@ -99,9 +99,12 @@ async function addConfigurations() {
         let elements = parent.querySelectorAll(".configuration-element");
         elements.forEach(element => {
 
-            element.addEventListener("click", async function () {
+            element.addEventListener("change", async function () {
                 let elementType = element.tagName.toLowerCase();
-                if (elementType === "textarea") {
+                if (elementType === "select") {
+                    let text = element.parentElement.innerText.split("\n")[0];
+                    console.log(index, text, element.value);
+                    await modifyServerConfigurations(index, text, element.value);
                 } else if (elementType === "input" && element.type === "checkbox") {
                     console.log(index, element.parentElement.innerText, (element.checked).toString().capitalize());
                     await modifyServerConfigurations(index, element.parentElement.innerText, (element.checked).toString().capitalize());

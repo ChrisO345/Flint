@@ -10,9 +10,16 @@ let custom_alphabet : (string * string) list =
 
 class base32 (direction : Common.encode_direction) =
   object
-    inherit BaseN.baseN "Base32" direction custom_alphabet
+    inherit BaseN.baseN "Base32" direction "Standard" custom_alphabet
 
     method encode (s : string) : string =
+      let alpha_config =
+        List.find_opt (fun cfg -> cfg#name = "Alphabet") configurations
+      in
+      let alpha_type =
+        match alpha_config with Some cfg -> cfg#value | None -> "Standard"
+      in
+      let alphabet = List.assoc alpha_type custom_alphabet in
       let to_binary_string c =
         let bin = Bytes.make 8 '0' in
         let rec loop n i =
@@ -53,6 +60,13 @@ class base32 (direction : Common.encode_direction) =
 
     method decode (s : string) : string option =
       try
+        let alpha_config =
+          List.find_opt (fun cfg -> cfg#name = "Alphabet") configurations
+        in
+        let alpha_type =
+          match alpha_config with Some cfg -> cfg#value | None -> "Standard"
+        in
+        let alphabet = List.assoc alpha_type custom_alphabet in
         let index_of_char c = String.index alphabet c in
         let bin_of_index i =
           let bin = Bytes.make 5 '0' in
