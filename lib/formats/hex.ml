@@ -5,7 +5,10 @@ let configurations =
 
 class hex (direction : Common.encode_direction) =
   object
-    inherit Common.operation "Hex" direction configurations
+    inherit
+      Common.operation
+        "Hex" direction
+        (Some [ new Common.configurable "Uppercase" `Toggle "True" None ])
 
     method encode (s : string) : string =
       let to_hex_string c = Printf.sprintf "%02x" (Char.code c) in

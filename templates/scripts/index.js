@@ -1,3 +1,10 @@
+Object.defineProperty(String.prototype, 'capitalize', {
+    value: function () {
+        return this.charAt(0).toUpperCase() + this.slice(1);
+    },
+    enumerable: false
+});
+
 const queueResults = document.getElementById("queue-results");
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -84,6 +91,42 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+async function addConfigurations() {
+    const parentArray = document.querySelectorAll(".queue-item");
+
+
+    parentArray.forEach((parent, index) => {
+        let elements = parent.querySelectorAll(".configuration-element");
+        elements.forEach(element => {
+
+            element.addEventListener("click", async function () {
+                let elementType = element.tagName.toLowerCase();
+                if (elementType === "textarea") {
+                } else if (elementType === "input" && element.type === "checkbox") {
+                    console.log(index, element.parentElement.innerText, (element.checked).toString().capitalize());
+                    await modifyServerConfigurations(index, element.parentElement.innerText, (element.checked).toString().capitalize());
+                }
+            });
+        });
+    });
+}
+
+async function modifyServerConfigurations(index, property, value) {
+    let req = {
+        method: "POST",
+        body: JSON.stringify({
+            method: "MOD",
+            name: property,
+            index: index,
+            value: value
+        })
+    }
+
+    let response = await fetch("/queue", req);
+    let configurations = await response.text();
+    console.log(configurations);
+}
+
 async function updateServerQueue(name) {
     let req = {
         method: "POST",
@@ -131,4 +174,6 @@ async function updateClientQueue() {
         return;
     }
     queueResults.innerHTML = text;
+
+    await addConfigurations();
 }
